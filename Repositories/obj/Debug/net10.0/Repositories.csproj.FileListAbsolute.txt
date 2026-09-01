@@ -13,3 +13,4 @@ C:\Users\ozany\Desktop\Projeler\CMS\Repositories\obj\Debug\net10.0\Repositories.
 C:\Users\ozany\Desktop\Projeler\CMS\Repositories\obj\Debug\net10.0\refint\Repositories.dll
 C:\Users\ozany\Desktop\Projeler\CMS\Repositories\obj\Debug\net10.0\Repositories.pdb
 C:\Users\ozany\Desktop\Projeler\CMS\Repositories\obj\Debug\net10.0\ref\Repositories.dll
+C:\Users\ozany\Desktop\Projeler\CMS\Repositories\obj\Debug\net10.0\Repositories.sourcelink.json
