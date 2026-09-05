@@ -1,0 +1,36 @@
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Repositories.EfCore;
+
+namespace WebApi.Extensions;
+
+public static class ServiceExtensions
+{
+    public static void ConfigureSqlContext(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
+    {
+        services.AddDbContext<RepositoryContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("sqlConnection"))
+        );
+    }
+
+    public static void ConfigureIdentity(this IServiceCollection services)
+    {
+        var builder = services
+            .AddIdentity<User, IdentityRole>(opts =>
+            {
+                opts.Password.RequireDigit = true;
+                opts.Password.RequireLowercase = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequiredLength = 6;
+
+                opts.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<RepositoryContext>()
+            .AddDefaultTokenProviders();
+    }
+}
