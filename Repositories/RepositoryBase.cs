@@ -5,7 +5,7 @@ using Repositories.EfCore;
 
 namespace Repositories;
 
-public class RepositoryBase<T> : IRepositoryBase<T>
+public abstract class RepositoryBase<T> : IRepositoryBase<T>
     where T : class
 {
     protected readonly RepositoryContext _context;
