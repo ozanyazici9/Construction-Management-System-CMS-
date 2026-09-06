@@ -23,5 +23,5 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
     public async Task<Company> GetOneCompanyById(int id, bool trackChanges) =>
         await FindByCondition(c => c.Id.Equals(id), trackChanges).SingleOrDefaultAsync();
 
-    public void UpdateOneCompant(Company company) => Update(company);
+    public void UpdateOneCompany(Company company) => Update(company);
 }
