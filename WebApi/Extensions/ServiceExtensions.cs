@@ -1,6 +1,7 @@
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Repositories.Contracts;
 using Repositories.EfCore;
 
 namespace WebApi.Extensions;
@@ -16,6 +17,9 @@ public static class ServiceExtensions
             options.UseSqlServer(configuration.GetConnectionString("sqlConnection"))
         );
     }
+
+    public static void ConfigureRepositoryManager(this IServiceCollection services) => 
+        services.AddScoped<IRepositoryManager, RepositoryManager>();
 
     public static void ConfigureIdentity(this IServiceCollection services)
     {
