@@ -13,11 +13,10 @@ public class RepositoryManager : IRepositoryManager
         _companyRepository = companyRepository;
     }
 
-
-    public ICompanyRepository Company => throw new NotImplementedException();
+    public ICompanyRepository Company => _companyRepository;
 
     public Task SaveAsync()
     {
-        throw new NotImplementedException();
+        return _context.SaveChangesAsync();
     }
 }
