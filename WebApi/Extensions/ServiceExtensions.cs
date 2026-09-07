@@ -42,4 +42,15 @@ public static class ServiceExtensions
             .AddEntityFrameworkStores<RepositoryContext>()
             .AddDefaultTokenProviders();
     }
+
+    public static void RegisterRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<ICompanyRepository, CompanyRepository>();
+    }
+
+    public static void RegisterServices(this IServiceCollection services)
+    {
+        services.AddScoped<ICompanyService, CompanyManager>();
+        services.AddScoped<ICurrentTenantService, CurrentTenantService>();
+    }
 }

@@ -15,8 +15,8 @@ public class RepositoryManager : IRepositoryManager
 
     public ICompanyRepository Company => _companyRepository;
 
-    public Task SaveAsync()
+    public async Task SaveAsync()
     {
-        return _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 }
