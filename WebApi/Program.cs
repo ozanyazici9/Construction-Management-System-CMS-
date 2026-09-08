@@ -1,6 +1,11 @@
+using NLog;
 using WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+LogManager
+    .Setup()
+    .LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -14,10 +19,10 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
+builder.Services.ConfigureLoggerService();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
 
 var app = builder.Build();
 
