@@ -1,0 +1,60 @@
+using Entities.Models;
+using Microsoft.AspNetCore.Mvc;
+using Services.Contracts;
+
+namespace Presentation.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class CompanyController : ControllerBase
+{
+    private readonly IServiceManager _manager;
+
+    public CompanyController(IServiceManager manager)
+    {
+        _manager = manager;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllCompanies()
+    {
+        var companies = await _manager.Company.GetAllCompaniesAsync(false);
+
+        return Ok(companies);
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetOneCompanyAsync([FromRoute(Name = "id")] int id)
+    {
+        var company = await _manager.Company.GetOneCompanyByIdAsync(id, false);
+
+        return Ok(company);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateOneCompanyAsync([FromBody] Company company)
+    {
+        var entity = await _manager.Company.CreateOneCompanyAsync(company);
+
+        return StatusCode(201, entity);
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteOneCompanyAsync([FromRoute(Name = "id")] int id)
+    {
+        await _manager.Company.DeleteOneCompanyAsync(id, trackChanges: false);
+
+        return NoContent();
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateOneCompanyAsync([FromRoute(Name = "id")] int id, [FromBody] Company company)
+    {
+        if (id != company.Id)
+            return BadRequest("Ids don't match.");
+
+        await _manager.Company.UpdateOneCompanyAsync(id, trackChanges: false);
+
+        return NoContent();
+    }
+}
