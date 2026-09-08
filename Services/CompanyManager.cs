@@ -1,3 +1,4 @@
+using Entities.Exceptions;
 using Entities.Models;
 using Repositories.Contracts;
 using Services.Contracts;
@@ -22,10 +23,7 @@ public class CompanyManager : ICompanyService
 
     public async Task DeleteOneCompanyAsync(int id, bool trackChanges)
     {
-        var company = await _manager.Company.GetOneCompanyById(id, trackChanges);
-
-        if (company is null)
-            throw new Exception($"Company with id: {id} doesn't exist in the database.");
+        var company = await GetOneCompanyAndCheckExists(id, trackChanges);
 
         _manager.Company.DeleteOneCompany(company);
         await _manager.SaveAsync();
@@ -38,24 +36,28 @@ public class CompanyManager : ICompanyService
         return companies;
     }
 
-    public Task<Company> GetOneCompanyByIdAsync(int id, bool trackChanges)
+    public async Task<Company> GetOneCompanyByIdAsync(int id, bool trackChanges)
     {
-        var company = _manager.Company.GetOneCompanyById(id, trackChanges);
-
-        if (company is null)
-            throw new Exception($"Company with id: {id} doesn't exist in the database.");
+        var company = await GetOneCompanyAndCheckExists(id, trackChanges);
 
         return company;
     }
 
     public async Task UpdateOneCompanyAsync(int id, bool trackChanges)
     {
-        var company = await _manager.Company.GetOneCompanyById(id, trackChanges);
-
-        if (company is null)
-            throw new Exception($"Company with id: {id} doesn't exist in the database.");
+        var company = await GetOneCompanyAndCheckExists(id, trackChanges);
 
         _manager.Company.UpdateOneCompany(company);
         await _manager.SaveAsync();
+    }
+
+    private async Task<Company> GetOneCompanyAndCheckExists(int id, bool trackChanges)
+    {
+        var company = await GetOneCompanyByIdAsync(id, trackChanges);
+
+        if (company is null)
+            throw new CompanyNotFoundException(id);
+
+        return company;
     }
 }
