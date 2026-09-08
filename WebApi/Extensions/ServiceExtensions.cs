@@ -53,4 +53,9 @@ public static class ServiceExtensions
         services.AddScoped<ICompanyService, CompanyManager>();
         services.AddScoped<ICurrentTenantService, CurrentTenantService>();
     }
+
+    public static void ConfigureLoggerService(this IServiceCollection services)
+    {
+        services.AddSingleton<ILoggerService, LoggerManager>();
+    }
 }
