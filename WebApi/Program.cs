@@ -29,6 +29,7 @@ builder.Services.ConfigureServiceManager();
 builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
 builder.Services.ConfigureLoggerService();
+builder.Services.AddAutoMapper(typeof(Program));
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

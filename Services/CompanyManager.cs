@@ -1,3 +1,5 @@
+using AutoMapper;
+using Entities.DataTransferObjects;
 using Entities.Exceptions;
 using Entities.Models;
 using Repositories.Contracts;
@@ -8,17 +10,21 @@ namespace Services;
 public class CompanyManager : ICompanyService
 {
     private readonly IRepositoryManager _manager;
+    private readonly IMapper _mapper;
 
-    public CompanyManager(IRepositoryManager manager)
+    public CompanyManager(IRepositoryManager manager , IMapper mapper)
     {
         _manager = manager;
+        _mapper = mapper;
     }
 
-    public async Task<Company> CreateOneCompanyAsync(Company company)
+    public async Task<CompanyDto> CreateOneCompanyAsync(CompanyForInsertionDto companyForInsertionDto)
     {
+        var company =_mapper.Map<Company>(companyForInsertionDto);
         _manager.Company.CreateOneCompany(company);
         await _manager.SaveAsync();
-        return company;
+
+        return _mapper.Map<CompanyDto>(company);
     }
 
     public async Task DeleteOneCompanyAsync(int id, bool trackChanges)
@@ -29,21 +35,21 @@ public class CompanyManager : ICompanyService
         await _manager.SaveAsync();
     }
 
-    public async Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges)
+    public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
     {
         var companies = await _manager.Company.GetAllCompaniesAsync(trackChanges);
 
-        return companies;
+        return _mapper.Map<IEnumerable<CompanyDto>>(companies);
     }
 
-    public async Task<Company> GetOneCompanyByIdAsync(int id, bool trackChanges)
+    public async Task<CompanyDto> GetOneCompanyByIdAsync(int id, bool trackChanges)
     {
         var company = await GetOneCompanyAndCheckExists(id, trackChanges);
 
-        return company;
+        return _mapper.Map<CompanyDto>(company);
     }
 
-    public async Task UpdateOneCompanyAsync(int id, bool trackChanges)
+    public async Task UpdateOneCompanyAsync(int id,  CompanyForUpdateDto companyForUpdateDto,bool trackChanges)
     {
         var company = await GetOneCompanyAndCheckExists(id, trackChanges);
 

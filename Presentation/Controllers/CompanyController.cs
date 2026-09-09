@@ -1,3 +1,4 @@
+using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
@@ -32,9 +33,9 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateOneCompanyAsync([FromBody] Company company)
+    public async Task<IActionResult> CreateOneCompanyAsync([FromBody] CompanyForInsertionDto companyForInsertionDto)
     {
-        var entity = await _manager.Company.CreateOneCompanyAsync(company);
+        var entity = await _manager.Company.CreateOneCompanyAsync(companyForInsertionDto);
 
         return StatusCode(201, entity);
     }
@@ -48,12 +49,12 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateOneCompanyAsync([FromRoute(Name = "id")] int id, [FromBody] Company company)
+    public async Task<IActionResult> UpdateOneCompanyAsync([FromRoute(Name = "id")] int id, [FromBody] CompanyForUpdateDto companyForUpdateDto)
     {
-        if (id != company.Id)
+        if (id != companyForUpdateDto.Id)
             return BadRequest("Ids don't match.");
 
-        await _manager.Company.UpdateOneCompanyAsync(id, trackChanges: false);
+        await _manager.Company.UpdateOneCompanyAsync(id, companyForUpdateDto ,trackChanges: false);
 
         return NoContent();
     }
