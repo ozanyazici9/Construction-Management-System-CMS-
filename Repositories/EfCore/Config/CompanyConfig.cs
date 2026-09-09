@@ -16,7 +16,6 @@ public class CompanyConfig : IEntityTypeConfiguration<Company>
         builder.Property(c => c.Phone).HasMaxLength(20);
         builder.Property(c => c.Address).HasMaxLength(300);
         builder.Property(c => c.City).HasMaxLength(100);
-        builder.Property(c => c.City).HasMaxLength(100);
         builder.Property(c => c.Country).HasMaxLength(100);
         builder.Property(c => c.Website).HasMaxLength(200);
         builder.Property(c => c.CreatedAt).IsRequired();
