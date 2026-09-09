@@ -53,7 +53,7 @@ public class CompanyManager : ICompanyService
 
     private async Task<Company> GetOneCompanyAndCheckExists(int id, bool trackChanges)
     {
-        var company = await GetOneCompanyByIdAsync(id, trackChanges);
+        var company = await _manager.Company.GetOneCompanyById(id, trackChanges);
 
         if (company is null)
             throw new CompanyNotFoundException(id);

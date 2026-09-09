@@ -9,7 +9,15 @@ LogManager
     .LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder
+    .Services.AddControllers()
+    .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly)
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft
+            .Json
+            .ReferenceLoopHandling
+            .Ignore
+    );
 
 // Swagger/Swashbuckle
 builder.Services.AddEndpointsApiExplorer();
