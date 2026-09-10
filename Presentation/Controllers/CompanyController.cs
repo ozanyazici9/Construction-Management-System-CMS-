@@ -54,7 +54,7 @@ public class CompanyController : ControllerBase
         if (id != companyForUpdateDto.Id)
             return BadRequest("Ids don't match.");
 
-        await _manager.Company.UpdateOneCompanyAsync(id, companyForUpdateDto ,trackChanges: false);
+        await _manager.Company.UpdateOneCompanyAsync(id, companyForUpdateDto ,trackChanges: true);
 
         return NoContent();
     }

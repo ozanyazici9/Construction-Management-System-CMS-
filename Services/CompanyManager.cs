@@ -49,11 +49,11 @@ public class CompanyManager : ICompanyService
         return _mapper.Map<CompanyDto>(company);
     }
 
-    public async Task UpdateOneCompanyAsync(int id,  CompanyForUpdateDto companyForUpdateDto,bool trackChanges)
+    public async Task UpdateOneCompanyAsync(int id, CompanyForUpdateDto companyForUpdateDto, bool trackChanges)
     {
         var company = await GetOneCompanyAndCheckExists(id, trackChanges);
 
-        _manager.Company.UpdateOneCompany(company);
+        _manager.Company.UpdateOneCompany(_mapper.Map(companyForUpdateDto, company));
         await _manager.SaveAsync();
     }
 
