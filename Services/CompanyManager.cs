@@ -49,6 +49,20 @@ public class CompanyManager : ICompanyService
         return _mapper.Map<CompanyDto>(company);
     }
 
+    public async Task<(CompanyForUpdateDto companyForUpdateDto, Company company)> GetOneCompanyForPatch(int id, bool trackChanges)
+    {
+        var company = await GetOneCompanyAndCheckExists(id, trackChanges);
+        var companyForUpdateDto = _mapper.Map<CompanyForUpdateDto>(company);
+        return (companyForUpdateDto, company);
+    }
+
+    public async Task SaveChangesForPatchAsync(CompanyForUpdateDto companyForUpdateDto, Company company)
+    {
+        _mapper.Map(companyForUpdateDto, company);
+        _manager.Company.UpdateOneCompany(company);
+        await _manager.SaveAsync();
+    }
+
     public async Task UpdateOneCompanyAsync(int id, CompanyForUpdateDto companyForUpdateDto, bool trackChanges)
     {
         var company = await GetOneCompanyAndCheckExists(id, trackChanges);
