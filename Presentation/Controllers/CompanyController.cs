@@ -1,5 +1,6 @@
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 
@@ -33,7 +34,9 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateOneCompanyAsync([FromBody] CompanyForInsertionDto companyForInsertionDto)
+    public async Task<IActionResult> CreateOneCompanyAsync(
+        [FromBody] CompanyForInsertionDto companyForInsertionDto
+    )
     {
         var entity = await _manager.Company.CreateOneCompanyAsync(companyForInsertionDto);
 
@@ -49,12 +52,38 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateOneCompanyAsync([FromRoute(Name = "id")] int id, [FromBody] CompanyForUpdateDto companyForUpdateDto)
+    public async Task<IActionResult> UpdateOneCompanyAsync(
+        [FromRoute(Name = "id")] int id,
+        [FromBody] CompanyForUpdateDto companyForUpdateDto
+    )
     {
         if (id != companyForUpdateDto.Id)
             return BadRequest("Ids don't match.");
 
-        await _manager.Company.UpdateOneCompanyAsync(id, companyForUpdateDto ,trackChanges: true);
+        await _manager.Company.UpdateOneCompanyAsync(id, companyForUpdateDto, trackChanges: true);
+
+        return NoContent();
+    }
+
+    [HttpPatch("{id:int}")]
+    public async Task<IActionResult> PartiallyUpdateOneCompanyAsync(
+        [FromRoute(Name = "id")] int id,
+        [FromBody] JsonPatchDocument<CompanyForUpdateDto> companyPatch
+    )
+    {
+        if(companyPatch is null)
+            return BadRequest();
+
+        var result = await _manager.Company.GetOneCompanyForPatch(id, false);
+
+        companyPatch.ApplyTo(result.companyForUpdateDto);
+
+        TryValidateModel(result.companyForUpdateDto);
+
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
+        await _manager.Company.SaveChangesForPatchAsync(result.companyForUpdateDto, result.company);
 
         return NoContent();
     }

@@ -10,4 +10,7 @@ public interface ICompanyService
     Task<CompanyDto> CreateOneCompanyAsync(CompanyForInsertionDto companyForInsertionDto);
     Task UpdateOneCompanyAsync(int id, CompanyForUpdateDto companyForUpdateDto ,bool trackChanges);
     Task DeleteOneCompanyAsync(int id, bool trackChanges);
+    Task<(CompanyForUpdateDto companyForUpdateDto, Company company)> GetOneCompanyForPatch(int id, bool trackChanges);
+    Task SaveChangesForPatchAsync(CompanyForUpdateDto companyForUpdateDto, Company company);
+
 }

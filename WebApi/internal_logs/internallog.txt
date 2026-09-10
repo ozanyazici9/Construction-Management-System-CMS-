@@ -26,3 +26,12 @@
 2026-09-10 14:54:44.0964 Info Registered target NLog.Targets.FileTarget(Name=logfile)
 2026-09-10 14:54:44.1134 Info NLog, Version=6.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 6.2.0.5698. Product version: 6.2.0+d38a12a9e2ed2f229d3990068cd7c66ebfd57805. GlobalAssemblyCache: False
 2026-09-10 14:54:44.1359 Info Configuration initialized: TargetNames=logfile, ConfigItems=16, AutoReload=true, FilePath=C:\Users\ozany\Desktop\Projeler\CMS\WebApi\nlog.config
+2026-09-10 18:06:37.9959 Info Registered target NLog.Targets.FileTarget(Name=logfile)
+2026-09-10 18:06:38.0081 Info NLog, Version=6.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 6.2.0.5698. Product version: 6.2.0+d38a12a9e2ed2f229d3990068cd7c66ebfd57805. GlobalAssemblyCache: False
+2026-09-10 18:06:38.0304 Info Configuration initialized: TargetNames=logfile, ConfigItems=16, AutoReload=true, FilePath=C:\Users\ozany\Desktop\Projeler\CMS\WebApi\nlog.config
+2026-09-10 18:11:25.0103 Info AppDomain Shutting down. LogFactory closing...
+2026-09-10 18:11:25.0220 Info LogFactory has been disposed.
+2026-09-10 18:11:37.0432 Info Registered target NLog.Targets.FileTarget(Name=logfile)
+2026-09-10 18:11:37.0559 Info NLog, Version=6.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 6.2.0.5698. Product version: 6.2.0+d38a12a9e2ed2f229d3990068cd7c66ebfd57805. GlobalAssemblyCache: False
+2026-09-10 18:11:37.0782 Info Configuration initialized: TargetNames=logfile, ConfigItems=16, AutoReload=true, FilePath=C:\Users\ozany\Desktop\Projeler\CMS\WebApi\nlog.config
+2026-09-10 18:12:05.1942 Info AppDomain Shutting down. LogFactory closing...
