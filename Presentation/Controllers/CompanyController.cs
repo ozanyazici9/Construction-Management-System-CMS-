@@ -1,11 +1,12 @@
 using Entities.DataTransferObjects;
-using Entities.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.ActionFilters;
 using Services.Contracts;
 
 namespace Presentation.Controllers;
 
+[ServiceFilter(typeof(LogFilterAttribute))]
 [ApiController]
 [Route("api/[controller]")]
 public class CompanyController : ControllerBase
@@ -34,6 +35,7 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateOneCompanyAsync(
         [FromBody] CompanyForInsertionDto companyForInsertionDto
     )
