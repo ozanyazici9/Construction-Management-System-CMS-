@@ -63,5 +63,6 @@ public static class ServiceExtensions
     public static void ConfigureActionFilters(this IServiceCollection services)
     {
         services.AddScoped<ValidationFilterAttribute>();
+        services.AddSingleton<LogFilterAttribute>();
     }
 }
