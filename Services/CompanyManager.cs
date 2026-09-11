@@ -2,6 +2,7 @@ using AutoMapper;
 using Entities.DataTransferObjects;
 using Entities.Exceptions;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Repositories.Contracts;
 using Services.Contracts;
 
@@ -12,15 +13,17 @@ public class CompanyManager : ICompanyService
     private readonly IRepositoryManager _manager;
     private readonly IMapper _mapper;
 
-    public CompanyManager(IRepositoryManager manager , IMapper mapper)
+    public CompanyManager(IRepositoryManager manager, IMapper mapper)
     {
         _manager = manager;
         _mapper = mapper;
     }
 
-    public async Task<CompanyDto> CreateOneCompanyAsync(CompanyForInsertionDto companyForInsertionDto)
+    public async Task<CompanyDto> CreateOneCompanyAsync(
+        CompanyForInsertionDto companyForInsertionDto
+    )
     {
-        var company =_mapper.Map<Company>(companyForInsertionDto);
+        var company = _mapper.Map<Company>(companyForInsertionDto);
         _manager.Company.CreateOneCompany(company);
         await _manager.SaveAsync();
 
@@ -35,11 +38,19 @@ public class CompanyManager : ICompanyService
         await _manager.SaveAsync();
     }
 
-    public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
+    public async Task<(IEnumerable<CompanyDto> companies, MetaData metaData)> GetAllCompaniesAsync(
+        CompanyParameters companyParameters,
+        bool trackChanges
+    )
     {
-        var companies = await _manager.Company.GetAllCompaniesAsync(trackChanges);
+        var companiesWithMetadata = await _manager.Company.GetAllCompaniesAsync(
+            companyParameters,
+            trackChanges
+        );
 
-        return _mapper.Map<IEnumerable<CompanyDto>>(companies);
+        var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companiesWithMetadata);
+
+        return (companiesDto, companiesWithMetadata.MetaData);
     }
 
     public async Task<CompanyDto> GetOneCompanyByIdAsync(int id, bool trackChanges)
@@ -49,21 +60,31 @@ public class CompanyManager : ICompanyService
         return _mapper.Map<CompanyDto>(company);
     }
 
-    public async Task<(CompanyForUpdateDto companyForUpdateDto, Company company)> GetOneCompanyForPatch(int id, bool trackChanges)
+    public async Task<(
+        CompanyForUpdateDto companyForUpdateDto,
+        Company company
+    )> GetOneCompanyForPatch(int id, bool trackChanges)
     {
         var company = await GetOneCompanyAndCheckExists(id, trackChanges);
         var companyForUpdateDto = _mapper.Map<CompanyForUpdateDto>(company);
         return (companyForUpdateDto, company);
     }
 
-    public async Task SaveChangesForPatchAsync(CompanyForUpdateDto companyForUpdateDto, Company company)
+    public async Task SaveChangesForPatchAsync(
+        CompanyForUpdateDto companyForUpdateDto,
+        Company company
+    )
     {
         _mapper.Map(companyForUpdateDto, company);
         _manager.Company.UpdateOneCompany(company);
         await _manager.SaveAsync();
     }
 
-    public async Task UpdateOneCompanyAsync(int id, CompanyForUpdateDto companyForUpdateDto, bool trackChanges)
+    public async Task UpdateOneCompanyAsync(
+        int id,
+        CompanyForUpdateDto companyForUpdateDto,
+        bool trackChanges
+    )
     {
         var company = await GetOneCompanyAndCheckExists(id, trackChanges);
 
