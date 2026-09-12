@@ -1,4 +1,5 @@
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
 
@@ -13,11 +14,11 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
 
     public void DeleteOneCompany(Company company) => Delete(company);
 
-    public async Task<List<Company>> GetAllCompaniesAsync(bool trackChanges)
+    public async Task<PagedList<Company>> GetAllCompaniesAsync(CompanyParameters companyParameters, bool trackChanges)
     {
         var companies = await FindAll(trackChanges).ToListAsync();
 
-        return companies;
+        return PagedList<Company>.ToPagedList(companies, companyParameters.PageNumber, companyParameters.PageSize);
     }
 
     public async Task<Company> GetOneCompanyById(int id, bool trackChanges) =>
