@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using Presentation.ActionFilters;
 using Services.Contracts;
 using WebApi.Extensions;
 
@@ -36,8 +35,9 @@ builder.Services.ConfigureServiceManager();
 builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
 builder.Services.ConfigureLoggerService();
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Program).Assembly));
 builder.Services.ConfigureActionFilters();
+builder.Services.ConfigureCors();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -61,6 +61,7 @@ if (app.Environment.IsProduction())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
+app.UseAuthorization();
 app.MapControllers();
-
 app.Run();
