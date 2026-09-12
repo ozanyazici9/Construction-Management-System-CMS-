@@ -2,6 +2,7 @@ using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
+using Repositories.Extensions;
 
 namespace Repositories.EfCore;
 
@@ -14,11 +15,20 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
 
     public void DeleteOneCompany(Company company) => Delete(company);
 
-    public async Task<PagedList<Company>> GetAllCompaniesAsync(CompanyParameters companyParameters, bool trackChanges)
+    public async Task<PagedList<Company>> GetAllCompaniesAsync(
+        CompanyParameters companyParameters,
+        bool trackChanges
+    )
     {
-        var companies = await FindAll(trackChanges).ToListAsync();
+        var companies = await FindAll(trackChanges)
+            .FilterCompanies(companyParameters.Country, companyParameters.City)
+            .ToListAsync();
 
-        return PagedList<Company>.ToPagedList(companies, companyParameters.PageNumber, companyParameters.PageSize);
+        return PagedList<Company>.ToPagedList(
+            companies,
+            companyParameters.PageNumber,
+            companyParameters.PageSize
+        );
     }
 
     public async Task<Company> GetOneCompanyById(int id, bool trackChanges) =>
