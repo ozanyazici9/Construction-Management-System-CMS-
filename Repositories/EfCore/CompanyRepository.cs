@@ -22,6 +22,7 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
     {
         var companies = await FindAll(trackChanges)
             .FilterCompanies(companyParameters.Country, companyParameters.City)
+            .SearchCompanies(companyParameters.Searchterm)
             .ToListAsync();
 
         return PagedList<Company>.ToPagedList(
