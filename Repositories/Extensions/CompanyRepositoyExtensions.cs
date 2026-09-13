@@ -2,7 +2,7 @@ using Entities.Models;
 
 namespace Repositories.Extensions;
 
-public static class CompanyRepositoyextensions
+public static class CompanyRepositoyExtensions
 {
     public static IQueryable<Company> FilterCompanies(
         this IQueryable<Company> companies,
@@ -17,5 +17,17 @@ public static class CompanyRepositoyextensions
             companies = companies.Where(c => c.City == city);
 
         return companies;
+    }
+
+    public static IQueryable<Company> SearchCompanies(
+        this IQueryable<Company> companies,
+        string? searchTerm
+    )
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+            return companies;
+
+        var lowerCaseTerm = searchTerm.Trim().ToLower();
+        return companies.Where(c => c.Name.ToLower().Contains(lowerCaseTerm));
     }
 }
