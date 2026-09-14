@@ -3,6 +3,7 @@ using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Contracts;
 using Repositories.Extensions;
+using WebApi.Extensions;
 
 namespace Repositories.EfCore;
 
@@ -23,6 +24,7 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
         var companies = await FindAll(trackChanges)
             .FilterCompanies(companyParameters.Country, companyParameters.City)
             .SearchCompanies(companyParameters.Searchterm)
+            .Sort(companyParameters.OrderBy)
             .ToListAsync();
 
         return PagedList<Company>.ToPagedList(
