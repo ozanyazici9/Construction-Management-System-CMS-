@@ -1,3 +1,4 @@
+using System.Dynamic;
 using AutoMapper;
 using Entities.DataTransferObjects;
 using Entities.Exceptions;
@@ -12,11 +13,13 @@ public class CompanyManager : ICompanyService
 {
     private readonly IRepositoryManager _manager;
     private readonly IMapper _mapper;
+    private readonly IDataShaper<CompanyDto> _shaper;
 
-    public CompanyManager(IRepositoryManager manager, IMapper mapper)
+    public CompanyManager(IRepositoryManager manager, IMapper mapper, IDataShaper<CompanyDto> shaper)
     {
         _manager = manager;
         _mapper = mapper;
+        _shaper = shaper;
     }
 
     public async Task<CompanyDto> CreateOneCompanyAsync(
@@ -38,7 +41,7 @@ public class CompanyManager : ICompanyService
         await _manager.SaveAsync();
     }
 
-    public async Task<(IEnumerable<CompanyDto> companies, MetaData metaData)> GetAllCompaniesAsync(
+    public async Task<(IEnumerable<ExpandoObject> companies, MetaData metaData)> GetAllCompaniesAsync(
         CompanyParameters companyParameters,
         bool trackChanges
     )
@@ -49,8 +52,9 @@ public class CompanyManager : ICompanyService
         );
 
         var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companiesWithMetadata);
+        var shapedCompanies =  _shaper.ShapeData(companiesDto, companyParameters.Fields);
 
-        return (companiesDto, companiesWithMetadata.MetaData);
+        return (shapedCompanies, companiesWithMetadata.MetaData);
     }
 
     public async Task<CompanyDto> GetOneCompanyByIdAsync(int id, bool trackChanges)

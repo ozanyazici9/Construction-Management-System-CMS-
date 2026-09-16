@@ -1,3 +1,4 @@
+using System.Dynamic;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
@@ -6,7 +7,7 @@ namespace Services.Contracts;
 
 public interface ICompanyService
 {
-    Task<(IEnumerable<CompanyDto> companies, MetaData metaData)> GetAllCompaniesAsync(
+    Task<(IEnumerable<ExpandoObject> companies, MetaData metaData)> GetAllCompaniesAsync(
         CompanyParameters companyParameters,
         bool trackChanges
     );
