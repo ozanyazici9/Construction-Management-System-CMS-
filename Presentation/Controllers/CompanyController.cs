@@ -21,15 +21,19 @@ public class CompanyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllCompanies([FromQuery] CompanyParameters companyParameters)
+    [HttpHead]
+    public async Task<IActionResult> GetAllCompanies(
+        [FromQuery] CompanyParameters companyParameters
+    )
     {
-        var pagedResult = await _manager.Company.GetAllCompaniesAsync(companyParameters ,false);
+        var pagedResult = await _manager.Company.GetAllCompaniesAsync(companyParameters, false);
         Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
         return Ok(pagedResult.companies);
     }
 
     [HttpGet("{id:int}")]
+    [HttpHead("{id:int}")]
     public async Task<IActionResult> GetOneCompanyAsync([FromRoute(Name = "id")] int id)
     {
         var company = await _manager.Company.GetOneCompanyByIdAsync(id, false);
@@ -76,7 +80,7 @@ public class CompanyController : ControllerBase
         [FromBody] JsonPatchDocument<CompanyForUpdateDto> companyPatch
     )
     {
-        if(companyPatch is null)
+        if (companyPatch is null)
             return BadRequest();
 
         var result = await _manager.Company.GetOneCompanyForPatch(id, false);
@@ -91,5 +95,16 @@ public class CompanyController : ControllerBase
         await _manager.Company.SaveChangesForPatchAsync(result.companyForUpdateDto, result.company);
 
         return NoContent();
+    }
+
+    [HttpOptions]
+    public IActionResult GetCompaniesOptions()
+    {
+        Response.Headers.Add(
+            "Allow",
+            "GET, PUT, CREATE, UPDATE, PATCH, POST, HEAD, OPTIONS, DELETE"
+        );
+
+        return Ok();
     }
 }
