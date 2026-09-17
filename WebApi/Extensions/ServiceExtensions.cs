@@ -1,3 +1,4 @@
+using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -80,5 +81,10 @@ public static class ServiceExtensions
                         .WithExposedHeaders("X-Pagination")
             );
         });
+    }
+
+    public static void ConfigureDataShaper(this IServiceCollection services)
+    {
+        services.AddScoped(typeof(IDataShaper<>), typeof(DataShaper<>));
     }
 }
