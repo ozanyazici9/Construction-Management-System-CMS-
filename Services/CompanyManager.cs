@@ -41,6 +41,11 @@ public class CompanyManager : ICompanyService
         await _manager.SaveAsync();
     }
 
+    public async Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges)
+    {
+        return await _manager.Company.GetAllCompaniesAsync(trackChanges);
+    }
+
     public async Task<(IEnumerable<ExpandoObject> companies, MetaData metaData)> GetAllCompaniesAsync(
         CompanyParameters companyParameters,
         bool trackChanges

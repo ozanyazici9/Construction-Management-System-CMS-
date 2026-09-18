@@ -3,6 +3,7 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using Presentation.ActionFilters;
 using Presentation.Controllers;
 using Repositories.Contracts;
@@ -111,5 +112,47 @@ public static class ServiceExtensions
                 opt.GroupNameFormat = "'v'VVV";
                 opt.SubstituteApiVersionInUrl = true;
             });
+    }
+
+    public static void ConfigureSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(s =>
+        {
+            s.SwaggerDoc(
+                "v1",
+                new OpenApiInfo
+                {
+                    Title = "CMS",
+                    Version = "v1",
+                    Description = "CMS ASP.NET Core API",
+                    TermsOfService = new Uri("https://www.ozanyazici.com.tr/"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Ozan Yazıcı",
+                        Email = "ozanyazici9@gmail.com",
+                        Url = new Uri("https://www.ozanyazici.com.tr/"),
+                    },
+                }
+            );
+            s.SwaggerDoc("v2", new OpenApiInfo { Title = "CMS V2", Version = "v2" });
+
+            s.AddSecurityDefinition(
+                "Bearer",
+                new OpenApiSecurityScheme()
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Enter your JWT token, no need to add the \"Bearer\" prefix.",
+                    Name = "Authorization",
+                    BearerFormat = "JWT",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                }
+            );
+
+            s.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+            {
+                [new OpenApiSecuritySchemeReference("Bearer", document)] = [],
+            });
+        });
     }
 }

@@ -9,5 +9,6 @@ public interface ICompanyRepository : IRepositoryBase<Company>
     Task<Company> GetOneCompanyById(int id, bool trackChanges);
     void CreateOneCompany(Company company);
     void UpdateOneCompany(Company company);
-    void DeleteOneCompany(Company company); 
+    void DeleteOneCompany(Company company);
+    Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges);
 }
