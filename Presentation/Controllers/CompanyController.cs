@@ -10,7 +10,8 @@ namespace Presentation.Controllers;
 
 [ServiceFilter(typeof(LogFilterAttribute))]
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/{v:apiversion}/companies")]
+[ApiExplorerSettings(GroupName = "v1")]
 public class CompanyController : ControllerBase
 {
     private readonly IServiceManager _manager;

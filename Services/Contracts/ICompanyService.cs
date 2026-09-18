@@ -20,4 +20,5 @@ public interface ICompanyService
         bool trackChanges
     );
     Task SaveChangesForPatchAsync(CompanyForUpdateDto companyForUpdateDto, Company company);
+    Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges);
 }
