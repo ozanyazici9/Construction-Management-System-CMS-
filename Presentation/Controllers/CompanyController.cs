@@ -27,7 +27,7 @@ public class CompanyController : ControllerBase
         [FromQuery] CompanyParameters companyParameters
     )
     {
-        var pagedResult = await _manager.Company.GetAllCompaniesAsync(companyParameters, false);
+        var pagedResult = await _manager.CompanyService.GetAllCompaniesAsync(companyParameters, false);
         Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
         return Ok(pagedResult.companies);
@@ -37,7 +37,7 @@ public class CompanyController : ControllerBase
     [HttpHead("{id:int}")]
     public async Task<IActionResult> GetOneCompanyAsync([FromRoute(Name = "id")] int id)
     {
-        var company = await _manager.Company.GetOneCompanyByIdAsync(id, false);
+        var company = await _manager.CompanyService.GetOneCompanyByIdAsync(id, false);
 
         return Ok(company);
     }
@@ -48,7 +48,7 @@ public class CompanyController : ControllerBase
         [FromBody] CompanyForInsertionDto companyForInsertionDto
     )
     {
-        var entity = await _manager.Company.CreateOneCompanyAsync(companyForInsertionDto);
+        var entity = await _manager.CompanyService.CreateOneCompanyAsync(companyForInsertionDto);
 
         return StatusCode(201, entity);
     }
@@ -56,7 +56,7 @@ public class CompanyController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteOneCompanyAsync([FromRoute(Name = "id")] int id)
     {
-        await _manager.Company.DeleteOneCompanyAsync(id, trackChanges: false);
+        await _manager.CompanyService.DeleteOneCompanyAsync(id, trackChanges: false);
 
         return NoContent();
     }
@@ -70,7 +70,7 @@ public class CompanyController : ControllerBase
         if (id != companyForUpdateDto.Id)
             return BadRequest("Ids don't match.");
 
-        await _manager.Company.UpdateOneCompanyAsync(id, companyForUpdateDto, trackChanges: true);
+        await _manager.CompanyService.UpdateOneCompanyAsync(id, companyForUpdateDto, trackChanges: true);
 
         return NoContent();
     }
@@ -84,7 +84,7 @@ public class CompanyController : ControllerBase
         if (companyPatch is null)
             return BadRequest();
 
-        var result = await _manager.Company.GetOneCompanyForPatch(id, false);
+        var result = await _manager.CompanyService.GetOneCompanyForPatch(id, false);
 
         companyPatch.ApplyTo(result.companyForUpdateDto);
 
@@ -93,7 +93,7 @@ public class CompanyController : ControllerBase
         if (!ModelState.IsValid)
             return UnprocessableEntity(ModelState);
 
-        await _manager.Company.SaveChangesForPatchAsync(result.companyForUpdateDto, result.company);
+        await _manager.CompanyService.SaveChangesForPatchAsync(result.companyForUpdateDto, result.company);
 
         return NoContent();
     }

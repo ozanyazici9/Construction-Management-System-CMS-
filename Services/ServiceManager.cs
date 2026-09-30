@@ -4,12 +4,16 @@ namespace Services;
 
 public class ServiceManager : IServiceManager
 {
-    private ICompanyService _companyService;
+    private readonly ICompanyService _companyService;
+    private readonly IAuthenticationService _authenticationService;
 
-    public ServiceManager(ICompanyService companyService )
+    public ServiceManager(ICompanyService companyService, IAuthenticationService authenticationService)
     {
         _companyService = companyService;
+        _authenticationService = authenticationService;
     }
 
-    public ICompanyService Company => _companyService;
+    public ICompanyService CompanyService => _companyService;
+
+    public IAuthenticationService AuthenticationService => _authenticationService;
 }

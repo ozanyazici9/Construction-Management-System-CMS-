@@ -1,4 +1,7 @@
+using Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.ActionFilters;
+using Services.Contracts;
 
 namespace Presentation.Controllers;
 
@@ -7,6 +10,13 @@ namespace Presentation.Controllers;
 [ApiExplorerSettings(GroupName = "v1")]
 public class AuthenticationController : ControllerBase
 {
+    private readonly IServiceManager _service;
+
+    public AuthenticationController(IServiceManager service)
+    {
+        _service = service;
+    }
+
     [HttpPost("register-company")]
     public IActionResult RegisterCompany()
     {
@@ -14,9 +24,22 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("accept-invite")]
-    public IActionResult AcceptInviteAndRegister()
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> AcceptInviteAndRegister(
+        [FromBody] UserForRegistrationDto userForRegistrationDto
+    )
     {
-        return Ok() ;
+        var result = await _service.AuthenticationService.RegisterUser(userForRegistrationDto);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+        }
+
+        return StatusCode(201);
     }
 
     [HttpPost("login")]

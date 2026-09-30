@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using Repositories.Contracts;
 
 namespace Repositories.EfCore;
@@ -14,6 +15,9 @@ public class RepositoryManager : IRepositoryManager
     }
 
     public ICompanyRepository Company => _companyRepository;
+
+    public Task<IDbContextTransaction> BeginTransactionAsync() =>
+        _context.Database.BeginTransactionAsync();
 
     public async Task SaveAsync()
     {
