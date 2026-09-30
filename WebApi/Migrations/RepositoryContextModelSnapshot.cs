@@ -129,6 +129,71 @@ namespace WebApi.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "11111111-1111-1111-1111-111111111111",
+                            Name = "SystemAdmin",
+                            NormalizedName = "SYSTEMADMIN"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
+                            Name = "CompanyAdmin",
+                            NormalizedName = "COMPANYADMIN"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            ConcurrencyStamp = "33333333-3333-3333-3333-333333333333",
+                            Name = "ProjectManager",
+                            NormalizedName = "PROJECTMANAGER"
+                        },
+                        new
+                        {
+                            Id = "4",
+                            ConcurrencyStamp = "44444444-4444-4444-4444-444444444444",
+                            Name = "SiteManager",
+                            NormalizedName = "SITEMANAGER"
+                        },
+                        new
+                        {
+                            Id = "5",
+                            ConcurrencyStamp = "55555555-5555-5555-5555-555555555555",
+                            Name = "Engineer",
+                            NormalizedName = "ENGINEER"
+                        },
+                        new
+                        {
+                            Id = "6",
+                            ConcurrencyStamp = "66666666-6666-6666-6666-666666666666",
+                            Name = "Accountant",
+                            NormalizedName = "ACCOUNTANT"
+                        },
+                        new
+                        {
+                            Id = "7",
+                            ConcurrencyStamp = "77777777-7777-7777-7777-777777777777",
+                            Name = "Procurement",
+                            NormalizedName = "PROCUREMENT"
+                        },
+                        new
+                        {
+                            Id = "8",
+                            ConcurrencyStamp = "88888888-8888-8888-8888-888888888888",
+                            Name = "Warehouse",
+                            NormalizedName = "WAREHOUSE"
+                        },
+                        new
+                        {
+                            Id = "9",
+                            ConcurrencyStamp = "99999999-9999-9999-9999-999999999999",
+                            Name = "Viewer",
+                            NormalizedName = "VIEWER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
