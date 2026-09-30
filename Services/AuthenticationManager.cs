@@ -12,12 +12,12 @@ public class AuthenticationManager : IAuthenticationService
 {
     private readonly UserManager<User> _userManager;
     private readonly IRepositoryManager _repositoryManager;
-    private readonly Mapper _mapper;
+    private readonly IMapper _mapper;
     private readonly ILoggerService _logger;
 
     public AuthenticationManager(
         UserManager<User> userManager,
-        Mapper mapper,
+        IMapper mapper,
         ILoggerService logger,
         IRepositoryManager repositoryManager
     )

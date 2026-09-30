@@ -6,7 +6,7 @@ using Services.Contracts;
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("api/{v:version}/[controller]")]
+[Route("api/{v:apiversion}/[controller]")]
 [ApiExplorerSettings(GroupName = "v1")]
 public class AuthenticationController : ControllerBase
 {
@@ -18,9 +18,21 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("register-company")]
-    public IActionResult RegisterCompany()
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> RegisterCompany([FromBody] CompanyForRegistrationDto companyForRegistrationDto)
     {
-        return Ok();
+        var result = await _service.AuthenticationService.RegisterCompanyAsync(companyForRegistrationDto);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.TryAddModelError(error.Code, error.Description);
+            }
+            return BadRequest(ModelState);
+        }
+
+        return StatusCode(201);
     }
 
     [HttpPost("accept-invite")]

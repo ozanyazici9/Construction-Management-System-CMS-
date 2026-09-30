@@ -18,7 +18,7 @@ public class CompanyV2Controller : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllCompanies()
     {
-        var companies = await _manager.Company.GetAllCompaniesAsync(trackChanges: false);
+        var companies = await _manager.CompanyService.GetAllCompaniesAsync(trackChanges: false);
 
         return Ok(companies);
     }
