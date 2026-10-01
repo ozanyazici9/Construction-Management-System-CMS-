@@ -8,13 +8,10 @@ public abstract record UserForManipulationDto
     public string? LastName { get; init; }
 
     [Required(ErrorMessage = "User name is required")]
-    public string? UserName { get; set; }
+    public string? UserName { get; init; }
 
     [Required(ErrorMessage = "Password is required")]
     public string? Password { get; init; }
     public string? Email { get; init; }
     public string? PhoneNumber { get; init; }
-
-    [Required(ErrorMessage = "Company field is required")]
-    public int CompanyId { get; init; }
 }

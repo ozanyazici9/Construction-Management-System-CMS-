@@ -34,7 +34,7 @@ public static class ServiceExtensions
     public static void ConfigureIdentity(this IServiceCollection services)
     {
         var builder = services
-            .AddIdentity<User, IdentityRole>(opts =>
+            .AddIdentity<User, IdentityRole<int>>(opts =>
             {
                 opts.Password.RequireDigit = true;
                 opts.Password.RequireLowercase = false;

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Repositories.EfCore;
 
-public class RepositoryContext : IdentityDbContext<IdentityUser>
+public class RepositoryContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
     public RepositoryContext(DbContextOptions options)
         : base(options) { }
