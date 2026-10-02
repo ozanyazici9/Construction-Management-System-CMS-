@@ -1,8 +1,11 @@
+using System.Text;
 using Asp.Versioning;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Presentation.ActionFilters;
 using Presentation.Controllers;
@@ -106,7 +109,8 @@ public static class ServiceExtensions
             {
                 opt.Conventions.Controller<CompanyController>().HasApiVersion(new ApiVersion(1, 0));
 
-                opt.Conventions.Controller<CompanyV2Controller>().HasApiVersion(new ApiVersion(2, 0));
+                opt.Conventions.Controller<CompanyV2Controller>()
+                    .HasApiVersion(new ApiVersion(2, 0));
             })
             .AddApiExplorer(opt =>
             {
@@ -155,5 +159,30 @@ public static class ServiceExtensions
                 [new OpenApiSecuritySchemeReference("Bearer", document)] = [],
             });
         });
+    }
+
+    public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
+    {
+        var jwtSettings = configuration.GetSection("JwtSettings");
+        var secretKey = jwtSettings["secretKey"];
+
+        services
+            .AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["validIssuer"],
+                    ValidAudience = jwtSettings["validAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+                }
+            );
     }
 }
