@@ -1,6 +1,8 @@
 using System.Text.Json;
+using Entities.Constants;
 using Entities.DataTransferObjects;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
@@ -8,6 +10,7 @@ using Services.Contracts;
 
 namespace Presentation.Controllers;
 
+[Authorize(Roles = RoleNames.SystemAdmin)]
 [ServiceFilter(typeof(LogFilterAttribute))]
 [ApiController]
 [Route("api/{v:apiversion}/companies")]
@@ -33,6 +36,7 @@ public class CompanyController : ControllerBase
         return Ok(pagedResult.companies);
     }
 
+    [Authorize(Roles = RoleNames.SystemAdmin)]
     [HttpGet("{id:int}")]
     [HttpHead("{id:int}")]
     public async Task<IActionResult> GetOneCompanyAsync([FromRoute(Name = "id")] int id)
