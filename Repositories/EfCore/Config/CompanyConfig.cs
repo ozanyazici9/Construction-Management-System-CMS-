@@ -25,8 +25,22 @@ public class CompanyConfig : IEntityTypeConfiguration<Company>
             new Company
             {
                 Id = 1,
-                Name = "Türkiye Company",
+                Name = "System Admin Company",
                 TaxNumber = "1111111111",
+                Email = "systemadmin@gmail.com",
+                Phone = "1111111111",
+                Address = "System Admin Address",
+                City = "Istanbul",
+                Country = "Türkiye",
+                Website = "www.systemadmin.com",
+                CreatedAt = new DateTime(2026, 10, 3),
+                IsActive = true,
+            },
+            new Company
+            {
+                Id = 2,
+                Name = "Türkiye Company",
+                TaxNumber = "2222222222",
                 Email = "turkiye@localhost",
                 Phone = "1111111111",
                 Address =
@@ -42,7 +56,7 @@ public class CompanyConfig : IEntityTypeConfiguration<Company>
         builder.HasData(
             new Company
             {
-                Id = 2,
+                Id = 3,
                 Name = "Default Company",
                 TaxNumber = "0000000000",
                 Email = "default@localhost",

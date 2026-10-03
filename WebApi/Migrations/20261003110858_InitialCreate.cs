@@ -204,13 +204,24 @@ namespace WebApi.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "CompanyId", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { 1, 0, 1, "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d", new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", true, "System", true, "Admin", true, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==", null, false, "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e", false, "admin" });
+
+            migrationBuilder.InsertData(
                 table: "Companies",
                 columns: new[] { "Id", "Address", "City", "Country", "CreatedAt", "Email", "IsActive", "Name", "Phone", "TaxNumber", "Website" },
                 values: new object[,]
                 {
-                    { 1, "Cumhuriyet Mahallesi, Atatürk Caddesi No: 24 Daire: 6, Kadıköy / İstanbul, 34710", "Istanbul", "Türkiye", new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "turkiye@localhost", true, "Türkiye Company", "1111111111", "1111111111", "www.turkiye.com" },
-                    { 2, "350 5th Avenue, New York, NY 10118", "New York", "United States", new DateTime(2022, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "default@localhost", true, "Default Company", "0000000000", "0000000000", "www.default.com" }
+                    { 1, "System Admin Address", "Istanbul", "Türkiye", new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "systemadmin@gmail.com", true, "System Admin Company", "1111111111", "1111111111", "www.systemadmin.com" },
+                    { 2, "Cumhuriyet Mahallesi, Atatürk Caddesi No: 24 Daire: 6, Kadıköy / İstanbul, 34710", "Istanbul", "Türkiye", new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "turkiye@localhost", true, "Türkiye Company", "1111111111", "2222222222", "www.turkiye.com" },
+                    { 3, "350 5th Avenue, New York, NY 10118", "New York", "United States", new DateTime(2022, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "default@localhost", true, "Default Company", "0000000000", "0000000000", "www.default.com" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

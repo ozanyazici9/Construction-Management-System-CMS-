@@ -77,6 +77,20 @@ namespace WebApi.Migrations
                         new
                         {
                             Id = 1,
+                            Address = "System Admin Address",
+                            City = "Istanbul",
+                            Country = "Türkiye",
+                            CreatedAt = new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "systemadmin@gmail.com",
+                            IsActive = true,
+                            Name = "System Admin Company",
+                            Phone = "1111111111",
+                            TaxNumber = "1111111111",
+                            Website = "www.systemadmin.com"
+                        },
+                        new
+                        {
+                            Id = 2,
                             Address = "Cumhuriyet Mahallesi, Atatürk Caddesi No: 24 Daire: 6, Kadıköy / İstanbul, 34710",
                             City = "Istanbul",
                             Country = "Türkiye",
@@ -85,12 +99,12 @@ namespace WebApi.Migrations
                             IsActive = true,
                             Name = "Türkiye Company",
                             Phone = "1111111111",
-                            TaxNumber = "1111111111",
+                            TaxNumber = "2222222222",
                             Website = "www.turkiye.com"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 3,
                             Address = "350 5th Avenue, New York, NY 10118",
                             City = "New York",
                             Country = "United States",
@@ -185,6 +199,29 @@ namespace WebApi.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            CompanyId = 1,
+                            ConcurrencyStamp = "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d",
+                            CreatedAt = new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "System",
+                            IsActive = true,
+                            LastName = "Admin",
+                            LockoutEnabled = true,
+                            NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                            NormalizedUserName = "ADMIN@EXAMPLE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -364,6 +401,13 @@ namespace WebApi.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 1
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
