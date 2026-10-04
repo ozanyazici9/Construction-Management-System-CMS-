@@ -1,4 +1,6 @@
+using Entities.Constants;
 using Entities.DataTransferObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
 using Services.Contracts;
@@ -19,9 +21,13 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost("register-company")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<IActionResult> RegisterCompany([FromBody] CompanyForRegistrationDto companyForRegistrationDto)
+    public async Task<IActionResult> RegisterCompany(
+        [FromBody] CompanyForRegistrationDto companyForRegistrationDto
+    )
     {
-        var result = await _service.AuthenticationService.RegisterCompanyAsync(companyForRegistrationDto);
+        var result = await _service.AuthenticationService.RegisterCompanyAsync(
+            companyForRegistrationDto
+        );
 
         if (!result.Succeeded)
         {
@@ -33,6 +39,22 @@ public class AuthenticationController : ControllerBase
         }
 
         return StatusCode(201);
+    }
+
+    [HttpPost("login")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> Authenticate(
+        [FromBody] UserForAuthenticationDto userForAuthDto
+    )
+    {
+        var result = await _service.AuthenticationService.ValidateUser(userForAuthDto);
+
+        if (!result)
+            return Unauthorized();
+
+        //var tokenDto =  await _service.AuthenticationService.CreateToken();
+
+        return Ok(new { Token = await _service.AuthenticationService.CreateToken() });
     }
 
     [HttpPost("accept-invite")]
@@ -54,21 +76,19 @@ public class AuthenticationController : ControllerBase
         return StatusCode(201);
     }
 
-    [HttpPost("login")]
+    [HttpPost("invite-systemadmin")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async  Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto userForAuthDto)
+    [Authorize(Roles = RoleNames.SystemAdmin)]
+    public async Task<IActionResult> InviteSystemAdmin(InvitationForSystemAdminDto inviteForSystemAdminDto)
     {
-        var result = await _service.AuthenticationService.ValidateUser(userForAuthDto);
+        return Ok();
+    }
 
-        if (!result)
-            return Unauthorized();
-        
-        //var tokenDto =  await _service.AuthenticationService.CreateToken();
-
-        return Ok(new
-        {
-           Token = await _service.AuthenticationService.CreateToken() 
-        });
-
+    [HttpPost("invite-user")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    [Authorize(Roles = RoleNames.CompanyAdmin)]
+    public async Task<IActionResult> InviteUser(InvitationForUsersDto invitationForUsersDto)
+    {
+        return Ok();
     }
 }
