@@ -1,3 +1,5 @@
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using Services.Contracts;
@@ -29,7 +31,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureSqlContext(builder.Configuration);
-builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
@@ -42,11 +43,19 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureDataShaper();
 builder.Services.ConfigureVersioning();
 builder.Services.ConfigureSwagger();
+builder.Services.ConfigureJWT(builder.Configuration);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.Use(async (ctx, next) =>
+{
+    Console.WriteLine($"--> {ctx.Request.Method} {ctx.Request.Path}");
+    await next();
+    Console.WriteLine($"<-- {ctx.Response.StatusCode}");
+});
 
 var logger = app.Services.GetRequiredService<ILoggerService>();
 app.ConfigureExceptionHandler(logger);

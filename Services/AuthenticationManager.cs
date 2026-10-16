@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
 using Entities.Constants;
@@ -38,12 +39,21 @@ public class AuthenticationManager : IAuthenticationService
         _configuration = configuration;
     }
 
-    public async Task<string> CreateToken()
+    public async Task<TokenDto> CreateToken(bool populateExp)
     {
         var signinCredentials = GetSiginCredentials();
         var claims = await GetClaims();
         var tokenOptions = GenerateTokenOptions(signinCredentials, claims);
-        return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+        var refreshToken = GenerateRefreshToken();
+        _user.RefreshToken = refreshToken;
+
+        if (populateExp)
+            _user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+        var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+        return new TokenDto { AccessToken = accessToken, RefreshToken = refreshToken };
     }
 
     public async Task<IdentityResult> RegisterCompanyAsync(
@@ -143,5 +153,59 @@ public class AuthenticationManager : IAuthenticationService
         );
 
         return tokenOptions;
+    }
+
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+    }
+
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+        var jwtSettings = _configuration.GetSection("JwtSettings");
+        var secretKey = jwtSettings["secretKey"];
+
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["validIssuer"],
+            ValidAudience = jwtSettings["validAudience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!)),
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        SecurityToken securityToken;
+
+        // ClaimsPrincipal: Süresi dolmuş access token'ın içinden çıkarılan kullanıcı kimliğidir.
+        // İçinde token'ın payload kısmındaki claim'ler (kullanıcı adı, roller, iss, aud, exp) bulunur.
+        // Burada amaç yetkilendirme değil, token'ın sahibini tespit etmektir:
+        // principal.Identity.Name ile kullanıcıyı veritabanından bulup refresh token'ını doğrularız.
+        var principal = tokenHandler.ValidateToken(
+            token,
+            tokenValidationParameters,
+            out securityToken
+        );
+
+        var jwtSecurityToken = securityToken as JwtSecurityToken;
+        if (
+            jwtSecurityToken is null
+            || !jwtSecurityToken.Header.Alg.Equals(
+                SecurityAlgorithms.HmacSha256,
+                StringComparison.InvariantCultureIgnoreCase
+            )
+        )
+        {
+            throw new SecurityTokenException("Invalid Token");
+        }
+
+        return principal;
     }
 }

@@ -9,4 +9,6 @@ public class User : IdentityUser<int>
     public string? LastName { get; set; }
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string? RefreshToken { get; set; }
+    public DateTime RefreshTokenExpiryTime { get; set; }
 }

@@ -18,7 +18,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             CreatedAt = new DateTime(2026, 10, 3),
 
             UserName = "admin",
-            NormalizedUserName = "ADMIN@EXAMPLE.COM",
+            NormalizedUserName = "ADMIN",
             Email = "admin@example.com",
             NormalizedEmail = "ADMIN@EXAMPLE.COM",
             EmailConfirmed = true,

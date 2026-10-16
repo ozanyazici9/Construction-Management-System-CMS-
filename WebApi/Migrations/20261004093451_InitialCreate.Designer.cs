@@ -12,7 +12,7 @@ using Repositories.EfCore;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20261003110858_InitialCreate")]
+    [Migration("20261004093451_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -218,7 +218,7 @@ namespace WebApi.Migrations
                             LastName = "Admin",
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                            NormalizedUserName = "ADMIN@EXAMPLE.COM",
+                            NormalizedUserName = "ADMIN",
                             PasswordHash = "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e",

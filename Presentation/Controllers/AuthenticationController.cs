@@ -52,9 +52,9 @@ public class AuthenticationController : ControllerBase
         if (!result)
             return Unauthorized();
 
-        //var tokenDto =  await _service.AuthenticationService.CreateToken();
+        var tokenDto =  await _service.AuthenticationService.CreateToken(populateExp: true);
 
-        return Ok(new { Token = await _service.AuthenticationService.CreateToken() });
+        return Ok(tokenDto);
     }
 
     [HttpPost("accept-invite")]

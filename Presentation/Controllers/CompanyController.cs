@@ -36,7 +36,7 @@ public class CompanyController : ControllerBase
         return Ok(pagedResult.companies);
     }
 
-    [Authorize(Roles = RoleNames.SystemAdmin)]
+  
     [HttpGet("{id:int}")]
     [HttpHead("{id:int}")]
     public async Task<IActionResult> GetOneCompanyAsync([FromRoute(Name = "id")] int id)

@@ -178,6 +178,12 @@ namespace WebApi.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -215,9 +221,10 @@ namespace WebApi.Migrations
                             LastName = "Admin",
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                            NormalizedUserName = "ADMIN@EXAMPLE.COM",
+                            NormalizedUserName = "ADMIN",
                             PasswordHash = "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==",
                             PhoneNumberConfirmed = false,
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SecurityStamp = "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e",
                             TwoFactorEnabled = false,
                             UserName = "admin"

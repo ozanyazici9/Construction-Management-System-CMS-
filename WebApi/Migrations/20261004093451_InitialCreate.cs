@@ -206,7 +206,7 @@ namespace WebApi.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "CompanyId", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, 1, "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d", new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", true, "System", true, "Admin", true, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==", null, false, "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e", false, "admin" });
+                values: new object[] { 1, 0, 1, "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d", new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", true, "System", true, "Admin", true, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==", null, false, "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "Companies",
