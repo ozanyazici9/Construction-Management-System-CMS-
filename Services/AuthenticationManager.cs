@@ -5,6 +5,7 @@ using System.Text;
 using AutoMapper;
 using Entities.Constants;
 using Entities.DataTransferObjects;
+using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +51,8 @@ public class AuthenticationManager : IAuthenticationService
 
         if (populateExp)
             _user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+        await _userManager.UpdateAsync(_user);
 
         var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
@@ -174,7 +177,7 @@ public class AuthenticationManager : IAuthenticationService
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = false,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtSettings["validIssuer"],
             ValidAudience = jwtSettings["validAudience"],
@@ -207,5 +210,17 @@ public class AuthenticationManager : IAuthenticationService
         }
 
         return principal;
+    }
+
+    public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
+    {
+        var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
+        var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+
+        if (user is null || user.RefreshToken != tokenDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            throw new RefreshTokenBadRequestException();
+
+        _user = user;
+        return await CreateToken(populateExp: false);
     }
 }

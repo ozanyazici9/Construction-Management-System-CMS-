@@ -52,9 +52,18 @@ public class AuthenticationController : ControllerBase
         if (!result)
             return Unauthorized();
 
-        var tokenDto =  await _service.AuthenticationService.CreateToken(populateExp: true);
+        var tokenDto = await _service.AuthenticationService.CreateToken(populateExp: true);
 
         return Ok(tokenDto);
+    }
+
+    [HttpPost("refresh")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
+    {
+        var tokenDtoToReturn = await _service.AuthenticationService.RefreshToken(tokenDto);
+
+        return Ok(tokenDtoToReturn);
     }
 
     [HttpPost("accept-invite")]
@@ -79,7 +88,9 @@ public class AuthenticationController : ControllerBase
     [HttpPost("invite-systemadmin")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     [Authorize(Roles = RoleNames.SystemAdmin)]
-    public async Task<IActionResult> InviteSystemAdmin(InvitationForSystemAdminDto inviteForSystemAdminDto)
+    public async Task<IActionResult> InviteSystemAdmin(
+        InvitationForSystemAdminDto inviteForSystemAdminDto
+    )
     {
         return Ok();
     }

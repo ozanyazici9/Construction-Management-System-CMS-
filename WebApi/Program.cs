@@ -50,13 +50,6 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.Use(async (ctx, next) =>
-{
-    Console.WriteLine($"--> {ctx.Request.Method} {ctx.Request.Path}");
-    await next();
-    Console.WriteLine($"<-- {ctx.Response.StatusCode}");
-});
-
 var logger = app.Services.GetRequiredService<ILoggerService>();
 app.ConfigureExceptionHandler(logger);
 

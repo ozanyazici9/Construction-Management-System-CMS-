@@ -36,7 +36,6 @@ public class CompanyController : ControllerBase
         return Ok(pagedResult.companies);
     }
 
-  
     [HttpGet("{id:int}")]
     [HttpHead("{id:int}")]
     public async Task<IActionResult> GetOneCompanyAsync([FromRoute(Name = "id")] int id)
