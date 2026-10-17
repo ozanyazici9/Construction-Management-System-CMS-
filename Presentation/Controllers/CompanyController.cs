@@ -30,7 +30,10 @@ public class CompanyController : ControllerBase
         [FromQuery] CompanyParameters companyParameters
     )
     {
-        var pagedResult = await _manager.CompanyService.GetAllCompaniesAsync(companyParameters, false);
+        var pagedResult = await _manager.CompanyService.GetAllCompaniesAsync(
+            companyParameters,
+            false
+        );
         Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
         return Ok(pagedResult.companies);
@@ -73,7 +76,11 @@ public class CompanyController : ControllerBase
         if (id != companyForUpdateDto.Id)
             return BadRequest("Ids don't match.");
 
-        await _manager.CompanyService.UpdateOneCompanyAsync(id, companyForUpdateDto, trackChanges: true);
+        await _manager.CompanyService.UpdateOneCompanyAsync(
+            id,
+            companyForUpdateDto,
+            trackChanges: true
+        );
 
         return NoContent();
     }
@@ -96,7 +103,10 @@ public class CompanyController : ControllerBase
         if (!ModelState.IsValid)
             return UnprocessableEntity(ModelState);
 
-        await _manager.CompanyService.SaveChangesForPatchAsync(result.companyForUpdateDto, result.company);
+        await _manager.CompanyService.SaveChangesForPatchAsync(
+            result.companyForUpdateDto,
+            result.company
+        );
 
         return NoContent();
     }
@@ -104,7 +114,7 @@ public class CompanyController : ControllerBase
     [HttpOptions]
     public IActionResult GetCompaniesOptions()
     {
-        Response.Headers.Add(
+        Response.Headers.Append(
             "Allow",
             "GET, PUT, CREATE, UPDATE, PATCH, POST, HEAD, OPTIONS, DELETE"
         );

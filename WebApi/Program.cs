@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +45,12 @@ builder.Services.ConfigureDataShaper();
 builder.Services.ConfigureVersioning();
 builder.Services.ConfigureSwagger();
 builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.AddMemoryCache();
+builder.Services.ConfigureRateLimitingOptions();
+
+// IHttpContextAccessor’ı DI’a kaydeder. Bu sayede controller dışındaki sınıflarda (service, repository, middleware dışı yardımcı sınıflar vb.) o anki HTTP isteğine HttpContext üzerinden erişebilirsin.
+builder.Services.AddHttpContextAccessor();
+// Kısacası akış şöyle: istek gelir → resolver’lar IP ve client ID’yi HttpContext’ten çıkarır → bu anahtara göre IRateLimitCounterStore’daki sayaç kontrol edilir → limit aşıldıysa 429 döner.
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -71,6 +78,7 @@ if (app.Environment.IsProduction())
 }
 
 app.UseHttpsRedirection();
+app.UseIpRateLimiting();
 app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
