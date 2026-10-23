@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,8 @@ namespace WebApi.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -205,8 +207,13 @@ namespace WebApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "CompanyId", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, 1, "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d", new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", true, "System", true, "Admin", true, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==", null, false, "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e", false, "admin" });
+                columns: new[] { "Id", "AccessFailedCount", "CompanyId", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RefreshToken", "RefreshTokenExpiryTime", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { 1, 0, 1, "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d", new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Utc), "systemAdmin@example.com", true, "System", true, "Admin", true, null, "SYSTEMADMIN@EXAMPLE.COM", "SYSTEMADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==", null, false, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e", false, "systemAdmin@example.com" },
+                    { 2, 0, 2, "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d", new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Utc), "companyAdmin1@example.com", true, "Company", true, "Admin", true, null, "COMPANYADMIN1@EXAMPLE.COM", "COMPANYADMIN1@EXAMPLE.COM", "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==", null, false, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e", false, "companyAdmin1@example.com" },
+                    { 3, 0, 3, "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d", new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Utc), "companyAdmin2@example.com", true, "Company", true, "Admin", true, null, "COMPANYADMIN2@EXAMPLE.COM", "COMPANYADMIN2@EXAMPLE.COM", "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==", null, false, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e", false, "companyAdmin2@example.com" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Companies",
@@ -221,7 +228,12 @@ namespace WebApi.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { 1, 1 });
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 2 },
+                    { 2, 3 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -253,7 +265,9 @@ namespace WebApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "AspNetUsers",
-                column: "NormalizedEmail");
+                column: "NormalizedEmail",
+                unique: true,
+                filter: "[NormalizedEmail] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

@@ -17,11 +17,33 @@ namespace Presentation.Controllers;
 [ApiExplorerSettings(GroupName = "v1")]
 public class CompanyController : ControllerBase
 {
-    private readonly IServiceManager _manager;
+    private readonly IServiceManager _service;
 
-    public CompanyController(IServiceManager manager)
+    public CompanyController(IServiceManager service)
     {
-        _manager = manager;
+        _service = service;
+    }
+
+    [HttpPost("register-company")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> RegisterCompany(
+        [FromBody] CompanyForRegistrationDto companyForRegistrationDto
+    )
+    {
+        var result = await _service.CompanyService.RegisterCompanyAsync(
+            companyForRegistrationDto
+        );
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.TryAddModelError(error.Code, error.Description);
+            }
+            return BadRequest(ModelState);
+        }
+
+        return StatusCode(201);
     }
 
     [HttpGet]
@@ -30,7 +52,7 @@ public class CompanyController : ControllerBase
         [FromQuery] CompanyParameters companyParameters
     )
     {
-        var pagedResult = await _manager.CompanyService.GetAllCompaniesAsync(
+        var pagedResult = await _service.CompanyService.GetAllCompaniesAsync(
             companyParameters,
             false
         );
@@ -43,26 +65,15 @@ public class CompanyController : ControllerBase
     [HttpHead("{id:int}")]
     public async Task<IActionResult> GetOneCompanyAsync([FromRoute(Name = "id")] int id)
     {
-        var company = await _manager.CompanyService.GetOneCompanyByIdAsync(id, false);
+        var company = await _service.CompanyService.GetOneCompanyByIdAsync(id, false);
 
         return Ok(company);
-    }
-
-    [HttpPost]
-    [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<IActionResult> CreateOneCompanyAsync(
-        [FromBody] CompanyForInsertionDto companyForInsertionDto
-    )
-    {
-        var entity = await _manager.CompanyService.CreateOneCompanyAsync(companyForInsertionDto);
-
-        return StatusCode(201, entity);
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteOneCompanyAsync([FromRoute(Name = "id")] int id)
     {
-        await _manager.CompanyService.DeleteOneCompanyAsync(id, trackChanges: false);
+        await _service.CompanyService.DeleteOneCompanyAsync(id, trackChanges: false);
 
         return NoContent();
     }
@@ -76,7 +87,7 @@ public class CompanyController : ControllerBase
         if (id != companyForUpdateDto.Id)
             return BadRequest("Ids don't match.");
 
-        await _manager.CompanyService.UpdateOneCompanyAsync(
+        await _service.CompanyService.UpdateOneCompanyAsync(
             id,
             companyForUpdateDto,
             trackChanges: true
@@ -94,7 +105,7 @@ public class CompanyController : ControllerBase
         if (companyPatch is null)
             return BadRequest();
 
-        var result = await _manager.CompanyService.GetOneCompanyForPatch(id, false);
+        var result = await _service.CompanyService.GetOneCompanyForPatch(id, false);
 
         companyPatch.ApplyTo(result.companyForUpdateDto);
 
@@ -103,7 +114,7 @@ public class CompanyController : ControllerBase
         if (!ModelState.IsValid)
             return UnprocessableEntity(ModelState);
 
-        await _manager.CompanyService.SaveChangesForPatchAsync(
+        await _service.CompanyService.SaveChangesForPatchAsync(
             result.companyForUpdateDto,
             result.company
         );

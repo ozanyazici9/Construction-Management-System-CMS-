@@ -197,7 +197,9 @@ namespace WebApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
+                        .IsUnique()
+                        .HasDatabaseName("EmailIndex")
+                        .HasFilter("[NormalizedEmail] IS NOT NULL");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
@@ -213,21 +215,65 @@ namespace WebApi.Migrations
                             AccessFailedCount = 0,
                             CompanyId = 1,
                             ConcurrencyStamp = "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d",
-                            CreatedAt = new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@example.com",
+                            CreatedAt = new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "systemAdmin@example.com",
                             EmailConfirmed = true,
                             FirstName = "System",
                             IsActive = true,
                             LastName = "Admin",
                             LockoutEnabled = true,
-                            NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                            NormalizedUserName = "ADMIN",
+                            NormalizedEmail = "SYSTEMADMIN@EXAMPLE.COM",
+                            NormalizedUserName = "SYSTEMADMIN@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SecurityStamp = "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e",
                             TwoFactorEnabled = false,
-                            UserName = "admin"
+                            UserName = "systemAdmin@example.com"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessFailedCount = 0,
+                            CompanyId = 2,
+                            ConcurrencyStamp = "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d",
+                            CreatedAt = new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "companyAdmin1@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Company",
+                            IsActive = true,
+                            LastName = "Admin",
+                            LockoutEnabled = true,
+                            NormalizedEmail = "COMPANYADMIN1@EXAMPLE.COM",
+                            NormalizedUserName = "COMPANYADMIN1@EXAMPLE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e",
+                            TwoFactorEnabled = false,
+                            UserName = "companyAdmin1@example.com"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccessFailedCount = 0,
+                            CompanyId = 3,
+                            ConcurrencyStamp = "b2e4a6c8-1f3d-4a5b-8c7e-9d0f1a2b3c4d",
+                            CreatedAt = new DateTime(2026, 10, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "companyAdmin2@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Company",
+                            IsActive = true,
+                            LastName = "Admin",
+                            LockoutEnabled = true,
+                            NormalizedEmail = "COMPANYADMIN2@EXAMPLE.COM",
+                            NormalizedUserName = "COMPANYADMIN2@EXAMPLE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGLjnwxdOjZoUf/P77ti+kRcp5qSqgr9nY76IGxpjcKA5pQaQvpkyyYlvbYI5Che5Q==",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "7c1f3b0e-5a2d-4e8b-9c64-1d2a3b4c5d6e",
+                            TwoFactorEnabled = false,
+                            UserName = "companyAdmin2@example.com"
                         });
                 });
 
@@ -414,6 +460,16 @@ namespace WebApi.Migrations
                         {
                             UserId = 1,
                             RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            RoleId = 2
                         });
                 });
 
