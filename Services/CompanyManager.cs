@@ -44,6 +44,7 @@ public class CompanyManager : ICompanyService
         await _repositoryManager.SaveAsync(); // company.Id burada oluşuyor.
 
         user.CompanyId = company.Id;
+        user.UserName = companyForRegistrationDto.Owner.Email;
 
         var result = await _userManager.CreateAsync(user, companyForRegistrationDto.Owner.Password);
         if (!result.Succeeded)
