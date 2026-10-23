@@ -1,6 +1,3 @@
 namespace Entities.DataTransferObjects;
 
-public record UserForOwnerRegistrationDto : UserForManipulationDto 
-{
-    
-}
+public record UserForOwnerRegistrationDto : UserForManipulationDto { }

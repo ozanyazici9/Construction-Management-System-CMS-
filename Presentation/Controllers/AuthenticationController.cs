@@ -19,28 +19,6 @@ public class AuthenticationController : ControllerBase
         _service = service;
     }
 
-    [HttpPost("register-company")]
-    [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<IActionResult> RegisterCompany(
-        [FromBody] CompanyForRegistrationDto companyForRegistrationDto
-    )
-    {
-        var result = await _service.AuthenticationService.RegisterCompanyAsync(
-            companyForRegistrationDto
-        );
-
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.TryAddModelError(error.Code, error.Description);
-            }
-            return BadRequest(ModelState);
-        }
-
-        return StatusCode(201);
-    }
-
     [HttpPost("login")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> Authenticate(
@@ -64,42 +42,5 @@ public class AuthenticationController : ControllerBase
         var tokenDtoToReturn = await _service.AuthenticationService.RefreshToken(tokenDto);
 
         return Ok(tokenDtoToReturn);
-    }
-
-    [HttpPost("accept-invite")]
-    [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<IActionResult> AcceptInviteAndRegister(
-        [FromBody] UserForRegistrationDto userForRegistrationDto
-    )
-    {
-        var result = await _service.AuthenticationService.RegisterUser(userForRegistrationDto);
-
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
-        }
-
-        return StatusCode(201);
-    }
-
-    [HttpPost("invite-systemadmin")]
-    [ServiceFilter(typeof(ValidationFilterAttribute))]
-    [Authorize(Roles = RoleNames.SystemAdmin)]
-    public async Task<IActionResult> InviteSystemAdmin(
-        InvitationForSystemAdminDto inviteForSystemAdminDto
-    )
-    {
-        return Ok();
-    }
-
-    [HttpPost("invite-user")]
-    [ServiceFilter(typeof(ValidationFilterAttribute))]
-    [Authorize(Roles = RoleNames.CompanyAdmin)]
-    public async Task<IActionResult> InviteUser(InvitationForUsersDto invitationForUsersDto)
-    {
-        return Ok();
     }
 }
